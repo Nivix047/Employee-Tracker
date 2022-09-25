@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "dotenv": "^16.0.2",
+    "init": "^0.1.2",
+    "inquirer": "^9.1.2",
+    "table": "^6.8.0"
+  }
+}
