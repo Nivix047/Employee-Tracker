@@ -31,3 +31,5 @@ create TABLE employee (
   REFERENCES role(id)
   ON DELETE SET NULL
 );
+
+-- FOREIGN KEY and REFERENCES is for locking 
