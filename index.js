@@ -8,6 +8,15 @@ const utils = require("util");
 db.query = utils.promisify(db.query);
 const logo = require("asciiart-logo");
 
+init();
+
+// Display logo text, load main prompts
+function init() {
+  const logoText = logo({ name: "Employee Manager" }).render();
+
+  console.log(logoText);
+}
+
 function startApp() {
   inquirer
     .prompt([
@@ -77,6 +86,8 @@ function updateEmployee() {
       value: id,
       name: `${first_name} ${last_name}`,
     }));
+    console.log("----const employee----");
+    console.log(employee);
     inquirer
       .prompt([
         {
@@ -87,6 +98,7 @@ function updateEmployee() {
         },
       ])
       .then((answer) => {
+        console.log(answer);
         let employeeID = answer.employee_id;
         db.query("SELECT role.id, role.title FROM role").then((result, err) => {
           if (err) console.log(err);
@@ -94,6 +106,8 @@ function updateEmployee() {
             value: id,
             name: title,
           }));
+          console.log("----const roleChoices----");
+          console.log(roleChoices);
           inquirer
             .prompt([
               {
