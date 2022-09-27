@@ -76,7 +76,9 @@ function startApp() {
 function viewAllEmployees() {}
 
 // Prompt the enter the employee's first name, last name, role, and manager, and that employee is added to the database
-function addEmployees() {}
+function addEmployees() {
+  db.query();
+}
 
 // Prompt to select an employee to update and their new role and this information is updated in the database
 function updateEmployee() {
@@ -159,6 +161,24 @@ function viewDept() {
 }
 
 // Prompt to enter the name of the department and that department is added to the database
-function addDepartment() {}
+function addDepartment() {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "new_department",
+        message: "What is the name of the department?",
+      },
+    ])
+    .then((answer) => {
+      db.query(
+        "INSERT INTO department (name) VALUES (?)",
+        answer.new_department
+      ).then((result, err) => {
+        if (err) console.error(err);
+        startApp();
+      });
+    });
+}
 
 startApp();
