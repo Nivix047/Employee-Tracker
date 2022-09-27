@@ -72,12 +72,75 @@ function startApp() {
     });
 }
 
-// Show employee data, including employee ids, first names, last names, job titles, departments, slaries, and managers that the employees report to
+// Show employee data, including employee ids, first names, last names, job titles, departments, salaries, and managers that the employees report to
 function viewAllEmployees() {}
 
 // Prompt the enter the employee's first name, last name, role, and manager, and that employee is added to the database
 function addEmployees() {
-  db.query();
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "first_name",
+        message: "What is the employee's first name",
+      },
+      {
+        type: "input",
+        name: "last_name",
+        message: "What is the employee's last name?",
+      },
+    ])
+    .then((answer) => {
+      let firstName = answer.first_name;
+      let lastName = answer.last_name;
+      db.query("SELECT role.id, role.title FROM role").then((result, err) => {
+        if (err) console.error(err);
+        const roleChoices = result.map(({ id, title }) => ({
+          value: id,
+          name: title,
+        }));
+        inquirer
+          .prompt([
+            {
+              type: "list",
+              name: "role",
+              message: "What is the role of the employee",
+              choices: roleChoices,
+            },
+          ])
+          .then((answer) => {
+            const roleChoice = answer.role;
+            db.query(
+              "SELECT employee.first_name, employee.last_name, employee.id FROM employee"
+            ).then((result, err) => {
+              if (err) console.error(err);
+              const employee = result.map(({ id, first_name, last_name }) => ({
+                value: id,
+                name: `${first_name} ${last_name}`,
+              }));
+              inquirer
+                .prompt([
+                  {
+                    type: "list",
+                    name: "manager",
+                    message: "Who is the employee's manager",
+                    choices: employee,
+                  },
+                ])
+                .then((answer) => {
+                  db.query(
+                    "INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)",
+                    [firstName, lastName, roleChoice, answer.manager]
+                  ).then((result, err) => {
+                    if (err) console.error(err);
+                    console.log("Added new employee");
+                    startApp();
+                  });
+                });
+            });
+          });
+      });
+    });
 }
 
 // Prompt to select an employee to update and their new role and this information is updated in the database
