@@ -73,7 +73,7 @@ function startApp() {
 // Show employee data, including employee ids, first names, last names, job titles, departments, salaries, and managers that the employees report to
 function viewAllEmployees() {
   db.query(
-    `SELECT employee.id, employee.first_name AS "first name", employee.last_name AS "last name", role.title, department.name AS "department", role.salary FROM employee LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department ON department_id = department.id`
+    `SELECT employee.id, employee.first_name AS "first name", employee.last_name AS "last name", role.title, department.name AS "department", role.salary, concat(manager.first_name, " ", manager.last_name) AS manager FROM employee LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department ON department_id = department.id LEFT JOIN employee manager on manager.id = employee.manager_id`
   ).then((result, err) => {
     if (err) console.error(err);
     console.table(result);
