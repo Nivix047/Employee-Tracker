@@ -8,8 +8,6 @@ const utils = require("util");
 db.query = utils.promisify(db.query);
 const logo = require("asciiart-logo");
 
-init();
-
 // Display logo text, load main prompts
 function init() {
   const logoText = logo({ name: "Employee Manager" }).render();
@@ -73,7 +71,15 @@ function startApp() {
 }
 
 // Show employee data, including employee ids, first names, last names, job titles, departments, salaries, and managers that the employees report to
-function viewAllEmployees() {}
+function viewAllEmployees() {
+  db.query(
+    `SELECT employee.id, employee.first_name AS "first name", employee.last_name AS "last name", role.title, department.name AS "department", role.salary FROM employee LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department ON department_id = department.id`
+  ).then((result, err) => {
+    if (err) console.error(err);
+    console.table(result);
+    startApp();
+  });
+}
 
 // Prompt the enter the employee's first name, last name, role, and manager, and that employee is added to the database
 function addEmployees() {
@@ -290,4 +296,5 @@ function addDepartment() {
     });
 }
 
+init();
 startApp();
