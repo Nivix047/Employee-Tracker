@@ -91,8 +91,8 @@ function addEmployees() {
       },
     ])
     .then((answer) => {
-      let firstName = answer.first_name;
-      let lastName = answer.last_name;
+      const firstName = answer.first_name;
+      const lastName = answer.last_name;
       db.query("SELECT role.id, role.title FROM role").then((result, err) => {
         if (err) console.error(err);
         const roleChoices = result.map(({ id, title }) => ({
@@ -203,7 +203,7 @@ function updateEmployee() {
 // Show job title, role id, the department that role belong to, and the salary for that role
 function viewRoles() {
   db.query(
-    "SELECT role.id, role.title, role.salary, department.name FROM role LEFT JOIN department ON role.department_id = department.id"
+    "SELECT role.id, role.title, role.salary FROM role LEFT JOIN department ON role.department_id = department.id"
   ).then((result, err) => {
     if (err) console.error(err);
     console.table(result);
@@ -212,7 +212,53 @@ function viewRoles() {
 }
 
 // Prompt to enter the name, salary, and department for the role and that role is added to the database
-function addRole() {}
+function addRole() {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "role_name",
+        message: "What is the name of the role?",
+      },
+      {
+        type: "input",
+        name: "salary",
+        message: "What is the salary of the role?",
+      },
+    ])
+    .then((answer) => {
+      const roleName = answer.role_name;
+      const salary = answer.salary;
+      db.query("SELECT department.id, department.name FROM department").then(
+        (result, err) => {
+          if (err) console.error(err);
+          const deptChoice = result.map(({ id, name }) => ({
+            value: id,
+            name: name,
+          }));
+          inquirer
+            .prompt([
+              {
+                type: "list",
+                name: "department",
+                message: "Which department does the role belong to?",
+                choices: deptChoice,
+              },
+            ])
+            .then((answer) => {
+              db.query(
+                "INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)",
+                [roleName, salary, answer.department]
+              ).then((result, err) => {
+                if (err) console.error(err);
+                console.log("Added new role");
+                startApp();
+              });
+            });
+        }
+      );
+    });
+}
 
 // Show department names and department ids
 function viewDept() {
