@@ -1,6 +1,9 @@
 // npm i inquirer@8.2 // newest inquirer does not work with vsc
 // npm i console.table
 // npm i mysql2
+// npm i dotenv
+// npm i nodemon -d
+
 const inquirer = require("inquirer");
 const db = require("./db/connection");
 require("console.table");
