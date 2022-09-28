@@ -157,8 +157,8 @@ function updateEmployee() {
       value: id,
       name: `${first_name} ${last_name}`,
     }));
-    console.log("----const employee----");
-    console.log(employee);
+    // console.log("----const employee----");
+    // console.log(employee);
     inquirer
       .prompt([
         {
@@ -169,7 +169,7 @@ function updateEmployee() {
         },
       ])
       .then((answer) => {
-        console.log(answer);
+        // console.log(answer);
         let employeeID = answer.employee_id;
         db.query("SELECT role.id, role.title FROM role").then((result, err) => {
           if (err) console.log(err);
@@ -177,8 +177,8 @@ function updateEmployee() {
             value: id,
             name: title,
           }));
-          console.log("----const roleChoices----");
-          console.log(roleChoices);
+          // console.log("----const roleChoices----");
+          // console.log(roleChoices);
           inquirer
             .prompt([
               {
@@ -189,8 +189,8 @@ function updateEmployee() {
               },
             ])
             .then((answer) => {
-              console.log(employeeID);
-              console.log(answer.role_id);
+              // console.log(employeeID);
+              // console.log(answer.role_id);
               db.query(
                 "UPDATE employee SET role_id = ? WHERE id = ?",
                 [answer.role_id, employeeID],
