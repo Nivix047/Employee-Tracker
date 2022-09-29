@@ -3,6 +3,7 @@
 // npm i mysql2
 // npm i dotenv
 // npm i nodemon -d
+// npm i asciiart-logo
 
 const inquirer = require("inquirer");
 const db = require("./db/connection");
